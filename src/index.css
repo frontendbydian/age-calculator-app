@@ -4,37 +4,37 @@
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-Regular.ttf);
+  src: url(/fonts/Poppins-Regular.ttf);
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-Bold.ttf);
+  src: url(/fonts/Poppins-Bold.ttf);
   font-weight: 700;
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-ExtraBold.ttf);
+  src: url(/fonts/Poppins-ExtraBold.ttf);
   font-weight: 800;
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-Italic.ttf);
+  src: url(/fonts/Poppins-Italic.ttf);
   font-style: italic;
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-BoldItalic.ttf);
+  src: url(/fonts/Poppins-BoldItalic.ttf);
   font-weight: 700;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url(/public/fonts/Poppins-ExtraBoldItalic.ttf);
+  src: url(/fonts/Poppins-ExtraBoldItalic.ttf);
   font-weight: 800;
   font-style: italic;
 }
@@ -51,4 +51,17 @@
 }
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
