@@ -5,9 +5,16 @@ type InputType = {
   placeholder: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  error?: string;
 };
 
-function DateInputGroup({ label, placeholder, value, setValue }: InputType) {
+function DateInputGroup({
+  label,
+  placeholder,
+  value,
+  setValue,
+  error,
+}: InputType) {
   const validateChange = (e: ChangeEvent<HTMLInputElement>, label: string) => {
     const date = new Date();
 
@@ -17,6 +24,11 @@ function DateInputGroup({ label, placeholder, value, setValue }: InputType) {
     const inputNumber = Number(inputValue);
 
     let maxValue: number = 0;
+
+    if (inputValue == "00") {
+      setValue("0");
+      return;
+    }
 
     switch (label) {
       case "DAY":
@@ -46,8 +58,11 @@ function DateInputGroup({ label, placeholder, value, setValue }: InputType) {
     }
   };
 
-  const validateBlur = (value: string) => {
-    if (Number(value) < 10 && value[0] != "0") {
+  const validateBlur = (value: string, label: string) => {
+    if (value == "0") {
+      setValue("");
+    }
+    if (value && Number(value) < 10 && value[0] != "0" && label != "YEAR") {
       setValue("0" + value);
     }
   };
@@ -55,23 +70,30 @@ function DateInputGroup({ label, placeholder, value, setValue }: InputType) {
   return (
     <div className="flex flex-col gap-1 md:gap-2 ">
       <label
-        className="text-xs font-bold tracking-widest md:text-base text-custom-smokey-grey"
+        className={`text-xs font-bold tracking-widest md:text-base text-custom-smokey-grey ${
+          error && "text-custom-light-red"
+        }`}
         htmlFor={label}
       >
         {label}
       </label>
       <input
-        className="px-3 py-2 text-lg font-bold border-2 rounded-lg md:text-3xl md:px-6 md:min-h-16 border-custom-light-grey max-w-20 md:max-w-36"
+        className={`px-3 py-2 text-lg font-bold border rounded-lg md:text-3xl md:px-6 md:min-h-16 border-custom-light-grey max-w-20 md:max-w-36 ${
+          error && "border-custom-light-red"
+        }`}
         type="text"
         name={label}
         id={label}
         value={value}
         placeholder={placeholder}
         onChange={(e) => validateChange(e, label)}
-        onBlur={() =>
-          label == "DAY" || label == "MONTH" ? validateBlur(value) : null
-        }
+        onBlur={() => validateBlur(value, label)}
       />
+      {error ? (
+        <p className="text-xs italic md:text-sm text-custom-light-red">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

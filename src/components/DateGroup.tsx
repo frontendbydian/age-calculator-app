@@ -10,6 +10,27 @@ function DateGroup({ ...props }: Props) {
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const [error, setError] = useState({
+    day: "",
+    month: "",
+    year: "",
+  });
+
+  const handleSubmit = () => {
+    if (!day || !month || !year) {
+      const errorRtequiresMessage: string = "This field is required";
+      setError({
+        day: !day ? errorRtequiresMessage : "",
+        month: !month ? errorRtequiresMessage : "",
+        year: !year ? errorRtequiresMessage : "",
+      });
+      console.log(error);
+
+      return;
+    } else {
+      setError({ day: "", month: "", year: "" });
+    }
+  };
   return (
     <React.Fragment>
       {a}
@@ -19,23 +40,29 @@ function DateGroup({ ...props }: Props) {
           placeholder="DD"
           value={day}
           setValue={setDay}
+          error={error.day}
         />
         <DateInputGroup
           label="MONTH"
           placeholder="MM"
           value={month}
           setValue={setMonth}
+          error={error.month}
         />
         <DateInputGroup
           label="YEAR"
           placeholder="YYYY"
           value={year}
           setValue={setYear}
+          error={error.year}
         />
       </div>
       <div className="flex items-center justify-center">
         <div className="flex-1 h-0 border"></div>
-        <button className="p-4 rounded-full md:p-6 bg-custom-purple">
+        <button
+          className="p-4 rounded-full md:p-6 bg-custom-purple"
+          onClick={handleSubmit}
+        >
           <span className="hidden">Calculate</span>
           <img
             src="/images/icon-arrow.svg"
