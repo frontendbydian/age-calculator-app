@@ -1,11 +1,15 @@
 import React, { ChangeEvent } from "react";
 
 type InputType = {
-  label: string;
+  label: "DAY" | "MONTH" | "YEAR";
   placeholder: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  error?: string;
+  error: {
+    day: string;
+    month: string;
+    year: string;
+  };
 };
 
 function DateInputGroup({
@@ -38,13 +42,13 @@ function DateInputGroup({
         maxValue = 12;
         break;
       case "YEAR":
-        maxValue = currentYear + 1;
+        maxValue = currentYear;
         break;
       default:
         maxValue = 31;
     }
 
-    if (!isNaN(inputNumber) && inputNumber < maxValue) {
+    if (!isNaN(inputNumber) && inputNumber <= maxValue) {
       if (
         inputValue[0] == "0" &&
         ["1", "2", "3"].includes(inputValue[1]) &&
@@ -79,7 +83,7 @@ function DateInputGroup({
       </label>
       <input
         className={`px-3 py-2 text-lg font-bold border rounded-lg md:text-3xl md:px-6 md:min-h-16 border-custom-light-grey max-w-20 md:max-w-36 ${
-          error && "border-custom-light-red"
+          error.day || error.month || (error.year && "border-custom-light-red")
         }`}
         type="text"
         name={label}
@@ -91,7 +95,7 @@ function DateInputGroup({
       />
       {error ? (
         <p className="text-xs italic md:text-sm text-custom-light-red">
-          {error}
+          {error[label.toLowerCase() as "day" | "month" | "year"]}
         </p>
       ) : null}
     </div>

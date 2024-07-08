@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import DateInputGroup from "./DateInputGroup";
+import { useDayOfMonth } from "../assets/hooks/useDayOfMonth";
 
 type Props = {
-  a?: string;
+  setDateDiff: Dispatch<
+    SetStateAction<{ day: string; month: string; year: string }>
+  >;
 };
 
-function DateGroup({ ...props }: Props) {
-  const { a } = props;
+function DateGroup({ setDateDiff }: Props) {
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [year, setYear] = useState<string>("");
@@ -17,12 +19,13 @@ function DateGroup({ ...props }: Props) {
   });
 
   const handleSubmit = () => {
+    setDateDiff({ day: "- -", month: "- -", year: "- -" });
     if (!day || !month || !year) {
-      const errorRtequiresMessage: string = "This field is required";
+      const errorRequiresMessage: string = "This field is required";
       setError({
-        day: !day ? errorRtequiresMessage : "",
-        month: !month ? errorRtequiresMessage : "",
-        year: !year ? errorRtequiresMessage : "",
+        day: !day ? errorRequiresMessage : "",
+        month: !month ? errorRequiresMessage : "",
+        year: !year ? errorRequiresMessage : "",
       });
       console.log(error);
 
@@ -30,31 +33,83 @@ function DateGroup({ ...props }: Props) {
     } else {
       setError({ day: "", month: "", year: "" });
     }
+
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    console.log(date.getDate() != Number(day));
+
+    if (date.getDate() != Number(day)) {
+      setError({ day: "Must be a valid date", month: "", year: "" });
+      return;
+    }
+
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    console.log(currentDay, currentMonth, currentYear);
+
+    let yearDiff: number = 0;
+    let monthDiff: number = 0;
+    let dayDiff: number = 0;
+
+    yearDiff = currentYear - Number(year);
+    monthDiff = currentMonth - Number(month);
+
+    if (monthDiff < 0) {
+      if (yearDiff == 0) {
+        setError({ day: "Must be a past date", month: "", year: "" });
+        return;
+      }
+      monthDiff += 12;
+      yearDiff -= 1;
+    }
+    dayDiff = currentDay - Number(day);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { listNumberOfDay } = useDayOfMonth(Number(year));
+    if (dayDiff < 0) {
+      if (monthDiff == 0 && yearDiff == 0) {
+        setError({ day: "Must be a past date", month: "", year: "" });
+        return;
+      }
+      const numberOfDay =
+        listNumberOfDay[
+          Number(month) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+        ];
+      dayDiff += numberOfDay;
+    }
+
+    console.log(yearDiff, monthDiff, dayDiff);
+
+    setDateDiff({
+      day: dayDiff.toString(),
+      month: monthDiff.toString(),
+      year: yearDiff.toString(),
+    });
   };
   return (
     <React.Fragment>
-      {a}
       <div className="flex justify-between md:justify-start md:gap-8">
         <DateInputGroup
           label="DAY"
           placeholder="DD"
           value={day}
           setValue={setDay}
-          error={error.day}
+          error={error}
         />
         <DateInputGroup
           label="MONTH"
           placeholder="MM"
           value={month}
           setValue={setMonth}
-          error={error.month}
+          error={error}
         />
         <DateInputGroup
           label="YEAR"
           placeholder="YYYY"
           value={year}
           setValue={setYear}
-          error={error.year}
+          error={error}
         />
       </div>
       <div className="flex items-center justify-center">

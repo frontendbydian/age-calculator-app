@@ -6,7 +6,12 @@ function Footer() {
         <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">
           Frontend Mentor
         </a>
-        . <br /> Coded by <a href="#">Your Name Here</a>.
+        . <br />
+        Coded by{" "}
+        <a href="https://www.linkedin.com/in/dianprasetyo-2021/">
+          Dian Prasetyo
+        </a>
+        .
       </div>
     </footer>
   );
