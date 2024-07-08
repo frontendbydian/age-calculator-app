@@ -72,9 +72,30 @@ function DateGroup({ setDateDiff }: Props) {
         setError({ day: "Must be a past date", month: "", year: "" });
         return;
       }
+
+      if (monthDiff - 1 <= 0) {
+        yearDiff -= 1;
+        monthDiff += 11;
+      } else {
+        monthDiff -= 1;
+      }
       const numberOfDay =
         listNumberOfDay[
-          Number(month) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+          Number(month) > 1
+            ? ((Number(month) - 1) as
+                | 1
+                | 2
+                | 3
+                | 4
+                | 5
+                | 6
+                | 7
+                | 8
+                | 9
+                | 10
+                | 11
+                | 12)
+            : 12
         ];
       dayDiff += numberOfDay;
     }
